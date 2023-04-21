@@ -1,0 +1,70 @@
+import tkinter as tk
+import os
+import fnmatch
+from pygame import mixer
+canvas=tk.Tk()
+canvas.title("MP3 Music Player")
+canvas.geometry("600x700")
+canvas.config(bg="Purple")
+rootpath=("C:\\Users\ijo\Desktop\SONGS")
+pattern="*.mp3"
+mixer.init()
+Play= tk.PhotoImage(file="Play.png")
+Stop= tk.PhotoImage(file="Stop.png")
+Prev= tk.PhotoImage(file="Prev.png")
+Next= tk.PhotoImage(file="Next.png")
+def select():
+    label.config(text= listBox.get("anchor"))
+    mixer.music.load(rootpath + "\\"+ listBox.get("anchor"))
+    mixer.music.play()
+def stop():
+    mixer.music.stop()
+    listBox.select_clear('ACTIVE')
+def play_next():
+    next_song=listBox.curselection()
+    next_song= next_song[0]+1
+    next_song_name= listBox.get(next_song)
+    label.config(text= next_song_name)
+    mixer.music.load(rootpath+"\\"+ next_song_name)
+    mixer.music,next()
+    listBox.select_clear(0,'end')
+    listBox.activate(next_song)
+    listBox.select_set(next_song)
+def play_prev():
+    next_song=listBox.curselection()
+    next_song= next_song[0]-1
+    next_song_name= listBox.get(next_song)
+    label.config(text= next_song_name)
+    mixer.music.load(rootpath+"\\"+ next_song_name)
+    mixer.music()
+    listBox.select_clear(0,'end')
+    listBox.activate(next_song)
+    listBox.select_set(next_song)
+def pause_song():
+    if pausebtn["text"]=="Pause":
+        mixer.music.pause()
+        pausebtn["text"]=="Play"
+    else:
+        mixer.music.unpause()
+        pausebtn["text"]="Pause"
+
+listBox= tk.Listbox(canvas,fg="green",bg="black",width=100,font=("times new roman",15))
+listBox.pack(padx=15,pady=15)
+label= tk.Label(canvas,text='',bg="black",fg="yellow",font=("times new roman",15))
+label.pack(pady=15)
+top= tk.Frame(canvas,bg="purple")
+top.pack(padx=10,pady=5,anchor='center')
+playbtn= tk.Button(canvas,text="PLAY",width=6,height=1,font=("Arial",16,"bold"),bg="gold",fg="navyblue", command=select)
+playbtn.pack(pady=15, in_= top,side ='left')
+pausebtn= tk.Button(canvas,text="PAUSE",width=8,height=1,font=("Arial",16,"bold"),fg="navyblue",bg="gold", command=pause_song)
+pausebtn.pack(pady=15, in_= top, side='left')
+stopbtn= tk.Button(canvas,text="STOP",width=10,height=1,font=("Arial",16,"bold"),fg="navyblue",bg="gold", command=stop)
+stopbtn.pack(pady=15, in_= top, side='left')
+prevbtn=tk.Button(canvas,text="PREV",width=6,height=1,font=("Arial",16,"bold"),fg="navyblue",bg="gold", command=play_prev)
+prevbtn.pack(pady=15,in_=top,side='left')
+nextbtn= tk.Button(canvas,text="NEXT",width=8,height=1,font=("Arial",16,"bold"),fg="navyblue",bg="gold", command= play_next)
+nextbtn.pack(pady=15,in_=top,side='left')
+for root,dirs,files in os.walk(rootpath):
+    for filename in fnmatch.filter(files,pattern):
+        listBox.insert('end',filename)
+canvas.mainloop()
